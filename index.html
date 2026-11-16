@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Python Expense Tracker Capstone</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 450px; margin: 40px auto; padding: 20px; background: #f4f6f9; }
+    .card { background: #fff; padding: 20px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    input, select, button { width: 100%; padding: 10px; margin: 8px 0; border-radius: 6px; border: 1px solid #ccc; box-sizing: border-box; }
+    button { background: #1e293b; color: white; border: none; font-weight: bold; cursor: pointer; }
+    ul { list-style: none; padding: 0; }
+    li { display: flex; justify-content: space-between; padding: 8px; border-bottom: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>💰 Expense Tracker</h2>
+    <input id="title" placeholder="Expense Title (e.g., Books, Food)">
+    <input id="amount" type="number" placeholder="Amount (₹)">
+    <select id="category"><option>Food</option><option>Study</option><option>Travel</option><option>Other</option></select>
+    <button onclick="addExpense()">Add Expense</button>
+    <h3>Total Spent: ₹<span id="total">0</span></h3>
+    <ul id="list"></ul>
+  </div>
+  <script>
+    let expenses = JSON.parse(localStorage.getItem("expenses") || "[]");
+    function render() {
+      const list = document.getElementById("list");
+      list.innerHTML = "";
+      let sum = 0;
+      expenses.forEach((e, i) => {
+        sum += e.amount;
+        list.innerHTML += `<li><span>${e.title} (${e.category})</span><b>₹${e.amount}</b></li>`;
+      });
+      document.getElementById("total").innerText = sum;
+      localStorage.setItem("expenses", JSON.stringify(expenses));
+    }
+    function addExpense() {
+      const title = document.getElementById("title").value.trim();
+      const amount = parseFloat(document.getElementById("amount").value);
+      const category = document.getElementById("category").value;
+      if (!title || isNaN(amount) || amount <= 0) return alert("Enter valid details");
+      expenses.push({ title, amount, category });
+      document.getElementById("title").value = "";
+      document.getElementById("amount").value = "";
+      render();
+    }
+    render();
+  </script>
+</body>
+</html>
